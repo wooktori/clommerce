@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  getAdditionalUserInfo,
   GoogleAuthProvider,
   AuthProvider,
 } from "firebase/auth";
@@ -43,10 +44,9 @@ export async function loginWithEmail(
 }
 
 export async function loginWithSocial(provider: SocialProvider): Promise<void> {
-  const { user, additionalUserInfo } = await signInWithPopup(
-    auth,
-    providerMap[provider]
-  );
+  const result = await signInWithPopup(auth, providerMap[provider]);
+  const { user } = result;
+  const additionalUserInfo = getAdditionalUserInfo(result);
 
   if (additionalUserInfo?.isNewUser) {
     await setDoc(doc(db, "users", user.uid), {
