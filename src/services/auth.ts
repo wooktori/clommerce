@@ -3,7 +3,6 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  getAdditionalUserInfo,
   GoogleAuthProvider,
   AuthProvider,
 } from "firebase/auth";
@@ -26,14 +25,19 @@ export async function signUpWithEmail(
 ): Promise<void> {
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
-  await setDoc(doc(db, "users", user.uid), {
-    id: user.uid,
-    email,
-    isSeller,
-    nickname,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+  try {
+    await setDoc(doc(db, "users", user.uid), {
+      id: user.uid,
+      email,
+      isSeller,
+      nickname,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  } catch (e) {
+    await user.delete();
+    throw e;
+  }
 }
 
 export async function loginWithEmail(
@@ -43,21 +47,9 @@ export async function loginWithEmail(
   await signInWithEmailAndPassword(auth, email, password);
 }
 
+// 소셜 로그인: 신규 유저 프로필 생성은 AuthProvider의 onAuthStateChanged에서 처리
 export async function loginWithSocial(provider: SocialProvider): Promise<void> {
-  const result = await signInWithPopup(auth, providerMap[provider]);
-  const { user } = result;
-  const additionalUserInfo = getAdditionalUserInfo(result);
-
-  if (additionalUserInfo?.isNewUser) {
-    await setDoc(doc(db, "users", user.uid), {
-      id: user.uid,
-      email: user.email ?? "",
-      isSeller: false,
-      nickname: user.displayName ?? user.email?.split("@")[0] ?? "사용자",
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-  }
+  await signInWithPopup(auth, providerMap[provider]);
 }
 
 export async function logout(): Promise<void> {
