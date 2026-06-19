@@ -31,7 +31,7 @@ export default function BuyerLayout({
     );
   }
 
-  if (!user || profile?.isSeller) return null;
+  if (!user || profile === null || profile.isSeller) return null;
 
   return <>{children}</>;
 }
