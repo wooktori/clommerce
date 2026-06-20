@@ -37,7 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ? await getOrCreateSocialUserProfile(firebaseUser)
         : await getUserProfile(firebaseUser.uid);
       setProfile(profileData);
-    } catch {
+    } catch (e) {
+      console.error("[AuthProvider] 프로필 로드 실패:", e);
       setProfile(null);
     }
   }, []);

@@ -26,7 +26,7 @@ export default function SignupForm() {
     }
   }, [user, profile, loading, router]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
 

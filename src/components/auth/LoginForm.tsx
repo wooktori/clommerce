@@ -21,9 +21,14 @@ export default function LoginForm() {
     if (user && profile) {
       router.replace(profile.isSeller ? "/seller/products" : "/");
     }
-  }, [user, profile, loading, router]);
+    // 로그인은 됐지만 프로필 로드 실패 (Firestore 권한 문제 등)
+    if (user && !profile && submitting) {
+      setError("계정 정보를 불러오지 못했습니다. Firestore 권한을 확인해주세요.");
+      setSubmitting(false);
+    }
+  }, [user, profile, loading, router, submitting]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     setSubmitting(true);
