@@ -48,9 +48,15 @@ export default function SignupForm() {
       await reloadProfile();
       router.replace(isSeller ? "/seller/products" : "/");
     } catch (err: unknown) {
-      if (err instanceof FirebaseError && err.code === "auth/email-already-in-use") {
-        setError("이미 사용 중인 이메일입니다.");
+      if (err instanceof FirebaseError) {
+        console.error("[SignupForm] FirebaseError:", err.code, err.message);
+        if (err.code === "auth/email-already-in-use") {
+          setError("이미 사용 중인 이메일입니다.");
+        } else {
+          setError(`회원가입 실패: ${err.code}`);
+        }
       } else {
+        console.error("[SignupForm] Unknown error:", err);
         setError("회원가입에 실패했습니다. 다시 시도해주세요.");
       }
     } finally {
