@@ -1,3 +1,9 @@
+import SellerProductList from "@/components/product/SellerProductList";
+
 export default function SellerProductsPage() {
-  return <div>판매자 상품 목록 (구현 예정)</div>;
+  return (
+    <main className="max-w-5xl mx-auto px-6 py-8">
+      <SellerProductList />
+    </main>
+  );
 }
