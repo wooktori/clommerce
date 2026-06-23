@@ -114,6 +114,21 @@ export async function getSellerProducts(
   };
 }
 
+export async function getProductsByCategory(
+  category: string,
+  pageLimit = 4
+): Promise<Product[]> {
+  const snap = await getDocs(
+    query(
+      collection(db, "products"),
+      where("productCategory", "==", category),
+      orderBy("createdAt", "desc"),
+      limit(pageLimit)
+    )
+  );
+  return snap.docs.map((d) => toProduct(d.id, d.data() as FirestoreProductData));
+}
+
 export async function getProduct(id: string): Promise<Product | null> {
   const snap = await getDoc(doc(db, "products", id));
   if (!snap.exists()) return null;
