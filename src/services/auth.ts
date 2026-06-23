@@ -4,17 +4,17 @@ import {
   signInWithPopup,
   signOut,
   GoogleAuthProvider,
+  GithubAuthProvider,
   AuthProvider,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 
-export type SocialProvider = "google";
+export type SocialProvider = "google" | "github";
 
 const providerMap: Record<SocialProvider, AuthProvider> = {
   google: new GoogleAuthProvider(),
-  // 새 소셜 로그인 추가 시 여기에만 추가
-  // github: new GithubAuthProvider(),
+  github: new GithubAuthProvider(),
 };
 
 export async function signUpWithEmail(
