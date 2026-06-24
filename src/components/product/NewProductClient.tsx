@@ -17,5 +17,12 @@ export default function NewProductClient() {
     router.push("/seller/products");
   }
 
-  return <ProductForm onSubmit={handleSubmit} loading={isPending} />;
+  return (
+    <ProductForm
+      title="새 상품 등록"
+      submitLabel="등록하기"
+      onSubmit={handleSubmit}
+      loading={isPending}
+    />
+  );
 }

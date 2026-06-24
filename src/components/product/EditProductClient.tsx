@@ -9,16 +9,59 @@ import { Product } from "@/types/product";
 import ProductForm from "./ProductForm";
 import { ProductFormData } from "@/services/product";
 
-export default function EditProductClient({
-  productId,
+function DeleteModal({
+  productName,
+  onConfirm,
+  onCancel,
+  isPending,
 }: {
-  productId: string;
+  productName: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  isPending: boolean;
 }) {
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 text-center">
+        <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
+          <span className="text-danger text-2xl font-bold leading-none">!</span>
+        </div>
+        <h2 className="text-lg font-bold text-heading mb-2">상품을 삭제할까요?</h2>
+        <p className="text-sm text-ink mb-1">
+          &apos;{productName}&apos; 상품이 영구 삭제됩니다.
+        </p>
+        <p className="text-xs text-ink-muted mb-8">
+          연결된 이미지도 Cloud Storage에서 함께 삭제됩니다.
+        </p>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isPending}
+            className="flex-1 h-12 border border-rule rounded-lg text-sm font-medium text-ink hover:bg-fill transition-colors"
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isPending}
+            className="flex-1 h-12 bg-danger text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+          >
+            {isPending ? "삭제 중..." : "삭제"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function EditProductClient({ productId }: { productId: string }) {
   const { user } = useAuth();
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { mutateAsync: update, isPending: isUpdating } = useUpdateProduct();
   const { mutateAsync: remove, isPending: isDeleting } = useDeleteProduct();
@@ -26,7 +69,7 @@ export default function EditProductClient({
   useEffect(() => {
     getProduct(productId).then((p) => {
       setProduct(p);
-      setLoading(false);
+      setFetchLoading(false);
     });
   }, [productId]);
 
@@ -46,53 +89,55 @@ export default function EditProductClient({
     router.push("/seller/products");
   }
 
-  if (loading) {
-    return <div className="animate-pulse space-y-4">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="h-10 bg-gray-200 rounded" />
-      ))}
-    </div>;
+  if (fetchLoading) {
+    return (
+      <div className="animate-pulse flex flex-col gap-5">
+        <div className="flex gap-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="w-24 h-24 bg-fill rounded" />
+          ))}
+        </div>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i}>
+            <div className="h-4 bg-fill rounded w-16 mb-2" />
+            <div className="h-11 bg-fill rounded" />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (!product) {
-    return <p className="text-gray-500 text-sm">상품을 찾을 수 없습니다.</p>;
+    return <p className="text-sm text-ink-muted text-center py-20">상품을 찾을 수 없습니다.</p>;
   }
 
   return (
-    <div>
+    <>
       <ProductForm
+        title="상품 수정"
+        submitLabel="수정 완료"
         initialData={product}
         onSubmit={handleSubmit}
         loading={isUpdating}
+        headerExtra={
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            className="px-4 py-2 border border-danger text-danger text-sm font-medium rounded-lg hover:bg-danger-bg transition-colors"
+          >
+            삭제
+          </button>
+        }
       />
 
-      <div className="mt-6 pt-6 border-t border-gray-200">
-        {!deleteConfirm ? (
-          <button
-            onClick={() => setDeleteConfirm(true)}
-            className="text-sm text-red-500 hover:text-red-700"
-          >
-            이 상품 삭제
-          </button>
-        ) : (
-          <div className="flex items-center gap-3">
-            <p className="text-sm text-gray-700">정말 삭제하시겠습니까?</p>
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="text-sm bg-red-500 text-white px-3 py-1.5 rounded hover:bg-red-600 disabled:opacity-50"
-            >
-              {isDeleting ? "삭제 중..." : "삭제"}
-            </button>
-            <button
-              onClick={() => setDeleteConfirm(false)}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              취소
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+      {showDeleteModal && (
+        <DeleteModal
+          productName={product.productName}
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteModal(false)}
+          isPending={isDeleting}
+        />
+      )}
+    </>
   );
 }
