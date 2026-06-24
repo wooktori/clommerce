@@ -1,3 +1,9 @@
+import BuyerOrderList from "@/components/order/BuyerOrderList";
+
 export default function BuyerOrdersPage() {
-  return <div>구매 내역 (구현 예정)</div>;
+  return (
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
+      <BuyerOrderList />
+    </main>
+  );
 }
