@@ -12,11 +12,11 @@ export default function CategorySection({ category, products }: CategorySectionP
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">{category}</h2>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-xs font-bold tracking-widest uppercase">{category}</h2>
         <Link
           href={`/products?category=${encodeURIComponent(category)}`}
-          className="text-sm text-gray-500 hover:text-black transition-colors"
+          className="text-2xs text-ink-muted hover:text-ink tracking-wide transition-colors"
         >
           더보기 →
         </Link>
