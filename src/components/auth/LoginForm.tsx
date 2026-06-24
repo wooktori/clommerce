@@ -30,7 +30,6 @@ export default function LoginForm() {
     setSubmitting(true);
     try {
       await loginWithEmail(email, password);
-      // profile 로드 후 useEffect에서 리다이렉트
     } catch (err: unknown) {
       if (
         err instanceof FirebaseError &&
@@ -57,8 +56,8 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="email" className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
           이메일
         </label>
         <input
@@ -66,13 +65,14 @@ export default function LoginForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="name@email.com"
           required
-          className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors placeholder:text-ink-subtle"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="password" className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
           비밀번호
         </label>
         <input
@@ -81,12 +81,12 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
       </div>
 
       {error && (
-        <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">
+        <p className="text-2xs text-danger border-l-2 border-danger pl-3 py-1">
           {error}
         </p>
       )}
@@ -94,15 +94,15 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="bg-black text-white rounded-lg py-2.5 font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="bg-brand text-white rounded-xs h-11 w-full text-2xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-1"
       >
         {submitting ? "처리 중..." : "로그인"}
       </button>
 
-      <div className="relative flex items-center">
-        <div className="flex-1 border-t border-gray-200" />
-        <span className="mx-3 text-xs text-gray-400">또는</span>
-        <div className="flex-1 border-t border-gray-200" />
+      <div className="flex items-center gap-3 my-1">
+        <div className="flex-1 border-t border-rule" />
+        <span className="text-2xs text-ink-subtle tracking-wide">또는</span>
+        <div className="flex-1 border-t border-rule" />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -116,9 +116,9 @@ export default function LoginForm() {
         ))}
       </div>
 
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-2xs text-ink-muted mt-1 tracking-wide">
         계정이 없으신가요?{" "}
-        <Link href="/signup" className="text-black font-medium hover:underline">
+        <Link href="/signup" className="text-heading font-bold hover:underline">
           회원가입
         </Link>
       </p>

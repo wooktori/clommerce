@@ -2,10 +2,28 @@ import SignupForm from "@/components/auth/SignupForm";
 
 export default function SignupPage() {
   return (
-    <main className="flex items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center">회원가입</h1>
-        <SignupForm />
+    <main className="min-h-screen flex flex-col md:flex-row">
+      {/* 브랜드 패널 */}
+      <div className="bg-brand md:flex-1 flex items-center justify-center px-10 py-14 md:py-0">
+        <div>
+          <p className="text-white text-base font-bold tracking-[0.3em] uppercase mb-2">
+            CLOMMERCE
+          </p>
+          <p className="text-white/30 text-2xs tracking-[0.2em] uppercase">
+            mono. commerce.
+          </p>
+        </div>
+      </div>
+
+      {/* 폼 패널 */}
+      <div className="md:flex-1 flex items-center justify-center px-8 py-12 md:px-16 bg-canvas">
+        <div className="w-full max-w-xs">
+          <h1 className="text-base font-bold text-heading tracking-tight mb-1">회원가입</h1>
+          <p className="text-2xs text-ink-muted mb-8 tracking-wide">
+            커머스 계정 만들기
+          </p>
+          <SignupForm />
+        </div>
       </div>
     </main>
   );

@@ -78,8 +78,8 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="nickname" className="text-sm font-medium">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="nickname" className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
           닉네임
         </label>
         <input
@@ -88,12 +88,12 @@ export default function SignupForm() {
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           required
-          className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="email" className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
           이메일
         </label>
         <input
@@ -102,12 +102,12 @@ export default function SignupForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="password" className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
           비밀번호
         </label>
         <input
@@ -116,25 +116,25 @@ export default function SignupForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
-        <p className="text-xs text-gray-500">
+        <p className="text-2xs text-ink-subtle tracking-wide">
           8자 이상 (3종류 조합) 또는 10자 이상 (2종류 조합)
         </p>
       </div>
 
-      <label className="flex items-center gap-2 cursor-pointer">
+      <label className="flex items-center gap-2.5 cursor-pointer">
         <input
           type="checkbox"
           checked={isSeller}
           onChange={(e) => setIsSeller(e.target.checked)}
-          className="w-4 h-4"
+          className="w-3.5 h-3.5 accent-brand"
         />
-        <span className="text-sm">판매자로 가입</span>
+        <span className="text-2xs font-medium tracking-wide text-ink">판매자로 가입</span>
       </label>
 
       {error && (
-        <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">
+        <p className="text-2xs text-danger border-l-2 border-danger pl-3 py-1">
           {error}
         </p>
       )}
@@ -142,15 +142,15 @@ export default function SignupForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="bg-black text-white rounded-lg py-2.5 font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="bg-brand text-white rounded-xs h-11 w-full text-2xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-1"
       >
         {submitting ? "처리 중..." : "회원가입"}
       </button>
 
-      <div className="relative flex items-center">
-        <div className="flex-1 border-t border-gray-200" />
-        <span className="mx-3 text-xs text-gray-400">또는</span>
-        <div className="flex-1 border-t border-gray-200" />
+      <div className="flex items-center gap-3 my-1">
+        <div className="flex-1 border-t border-rule" />
+        <span className="text-2xs text-ink-subtle tracking-wide">또는</span>
+        <div className="flex-1 border-t border-rule" />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -164,9 +164,9 @@ export default function SignupForm() {
         ))}
       </div>
 
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-2xs text-ink-muted mt-1 tracking-wide">
         이미 계정이 있으신가요?{" "}
-        <Link href="/login" className="text-black font-medium hover:underline">
+        <Link href="/login" className="text-heading font-bold hover:underline">
           로그인
         </Link>
       </p>
