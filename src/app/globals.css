@@ -1,26 +1,293 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────
+   바이모노 디자인 시스템
+   소스: DESIGN.md 토큰 기반
+   타겟: WCAG 2.2 AA
+───────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* ─── Font Family ───────────────────────────────────────────── */
+  --font-sans: var(--font-lato), Pretendard, "Apple SD Gothic Neo", "맑은 고딕",
+    malgun gothic, 돋움, dotum, sans-serif;
+
+  /* ─── Type Scale ────────────────────────────────────────────────
+     출처: DESIGN.md font.size.*
+     xs=10  sm=11  md=12(base)  lg=13  xl=14  2xl=15  3xl=24  4xl=28  */
+  --text-2xs:  0.625rem;    /*  10px — font.size.xs  : 마이크로 레이블  */
+  --text-xs:   0.6875rem;   /*  11px — font.size.sm  : 보조 텍스트, 태그 */
+  --text-sm:   0.75rem;     /*  12px — font.size.md  : 바디 기본, 인풋 */
+  --text-md:   0.8125rem;   /*  13px — font.size.lg  : 강조 바디        */
+  --text-base: 0.875rem;    /*  14px — font.size.xl  : 서브헤딩, 네비   */
+  --text-lg:   0.9375rem;   /*  15px — font.size.2xl : 섹션 레이블      */
+  --text-xl:   1.5rem;      /*  24px — font.size.3xl : 페이지 헤딩      */
+  --text-2xl:  1.75rem;     /*  28px — font.size.4xl : 히어로 헤딩      */
+
+  /* ─── Colors ────────────────────────────────────────────────── */
+
+  /* Brand — 스틸 블루 (파스텔 톤) */
+  --color-brand:        #4570b2;
+
+  /* Ink — 블루-슬레이트 텍스트 계층 */
+  --color-ink:          #1a2a3c;   /* 본문 기본 */
+  --color-ink-muted:    #5a7290;   /* 보조 텍스트 */
+  --color-ink-subtle:   #a0b4cc;   /* 플레이스홀더 */
+  --color-ink-on-dark:  #ffffff;
+  --color-heading:      #0d1e30;   /* 헤딩 최강조 */
+
+  /* Surface — 파스텔 블루 배경 */
+  --color-canvas:       #f4f7fd;   /* 페이지 배경 */
+  --color-fill:         #e8eff9;   /* 컴포넌트 fill */
+  --color-fill-hover:   #dae6f4;   /* hover fill */
+
+  /* Border — 블루 계열 */
+  --color-rule:         #c8d8ed;
+  --color-rule-strong:  #adc4e4;
+
+  /* Feedback */
+  --color-danger:       #cc3333;
+  --color-danger-bg:    #fff0f0;
+  --color-success:      #1a7a4a;
+  --color-success-bg:   #edfaf3;
+
+  /* ─── Motion ────────────────────────────────────────────────────
+     출처: DESIGN.md motion.duration.instant=500ms
+     instant = 브랜드 주요 전환 (의도적으로 느린 브랜드 리듬)
+     fast    = 마이크로 인터랙션 (hover, focus)
+     normal  = 패널 open/close                                      */
+  --duration-instant:   500ms;
+  --duration-fast:      150ms;
+  --duration-normal:    300ms;
+  --ease-standard:      cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate:    cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate:    cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ─── 시맨틱 스페이싱 토큰 (DESIGN.md space.*) ─────────────────────
+   Tailwind 기본 스케일을 덮어쓰지 않도록 :root 에 선언.
+   컴포넌트 CSS 및 인라인 스타일에서 var(--space-N) 으로 참조.
+
+   space.1=2px  space.2=6px  space.3=8px  space.4=10px
+   space.5=15px space.6=25px space.7=50px                          */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --space-1: 0.125rem;    /*  2px */
+  --space-2: 0.375rem;    /*  6px */
+  --space-3: 0.5rem;      /*  8px */
+  --space-4: 0.625rem;    /* 10px */
+  --space-5: 0.9375rem;   /* 15px */
+  --space-6: 1.5625rem;   /* 25px */
+  --space-7: 3.125rem;    /* 50px */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ─── Base ──────────────────────────────────────────────────────── */
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);         /* 12px — DESIGN.md font.size.base  */
+    font-weight: 500;                  /* DESIGN.md font.weight.base=500   */
+    line-height: 1.5;                  /* 18px at 12px — font.lineHeight.base */
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  /* WCAG 2.2 AA: 키보드 포커스 표시 필수 */
+  *:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  /* WCAG 2.2 AA: 모션 감소 선호 시 전환 비활성 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Components ────────────────────────────────────────────────── */
+@layer components {
+
+  /* ── Button ───────────────────────────────────────────────────────
+     상태: default · hover · focus-visible · active · disabled · loading
+     키보드: Space/Enter 활성화, Tab 포커스 이동
+     터치: 최소 44×44px 터치 타겟 권장                              */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 2.25rem;            /* 36px — 터치 타겟 */
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition-property: opacity, background-color, color, border-color, box-shadow;
+    transition-duration: var(--duration-fast);
+    transition-timing-function: var(--ease-standard);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .btn[data-loading="true"] {
+    opacity: 0.7;
+    cursor: wait;
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    background-color: var(--color-brand);
+    color: var(--color-ink-on-dark);
+  }
+  .btn-primary:hover:not(:disabled):not([aria-disabled="true"])  { opacity: 0.85; }
+  .btn-primary:active:not(:disabled):not([aria-disabled="true"]) { opacity: 0.7; }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-rule);
+  }
+  .btn-secondary:hover:not(:disabled):not([aria-disabled="true"])  { background-color: var(--color-fill); }
+  .btn-secondary:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--color-fill-hover); }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-ink);
+  }
+  .btn-ghost:hover:not(:disabled):not([aria-disabled="true"])  { background-color: var(--color-fill); }
+  .btn-ghost:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--color-fill-hover); }
+
+  .btn-danger {
+    background-color: var(--color-danger);
+    color: var(--color-ink-on-dark);
+  }
+  .btn-danger:hover:not(:disabled):not([aria-disabled="true"])  { opacity: 0.85; }
+  .btn-danger:active:not(:disabled):not([aria-disabled="true"]) { opacity: 0.7; }
+
+  /* ── Input ────────────────────────────────────────────────────────
+     상태: default · hover · focus · error(aria-invalid) · disabled
+     접근성: 반드시 <label> 또는 aria-label 과 쌍으로 사용          */
+  .input {
+    width: 100%;
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    border: 1px solid var(--color-rule);
+    border-radius: 2px;
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+  .input::placeholder          { color: var(--color-ink-subtle); }
+  .input:hover                 { border-color: var(--color-rule-strong); }
+  .input:focus                 { border-color: var(--color-brand); }
+  .input:focus-visible         { outline: 2px solid var(--color-brand); outline-offset: -1px; }
+  .input:disabled              {
+    background: var(--color-fill);
+    color: var(--color-ink-muted);
+    cursor: not-allowed;
+  }
+  .input[aria-invalid="true"]  { border-color: var(--color-danger); }
+
+  /* ── Label ─────────────────────────────────────────────────────── */
+  .label {
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  /* ── Field (label + input + error 조합) ─────────────────────────── */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .field-error {
+    font-size: var(--text-2xs);
+    color: var(--color-danger);
+  }
+  .field-hint {
+    font-size: var(--text-2xs);
+    color: var(--color-ink-muted);
+  }
+
+  /* ── Card ──────────────────────────────────────────────────────── */
+  .card {
+    background: var(--color-canvas);
+    border: 1px solid var(--color-rule);
+    border-radius: 2px;
+  }
+
+  /* ── Badge ─────────────────────────────────────────────────────── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    background: var(--color-fill);
+    color: var(--color-ink-muted);
+  }
+  .badge-brand {
+    background: var(--color-brand);
+    color: var(--color-ink-on-dark);
+  }
+  .badge-success {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+  }
+  .badge-danger {
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+  }
+
+  /* ── Divider ────────────────────────────────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  /* ── Skeleton (로딩 플레이스홀더) ────────────────────────────────
+     @media (prefers-reduced-motion) 에서 자동으로 비활성됨          */
+  .skeleton {
+    background: var(--color-fill);
+    border-radius: 2px;
+    animation: skeleton-pulse 1.4s var(--ease-standard) infinite;
+  }
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+  }
 }
