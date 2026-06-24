@@ -7,10 +7,21 @@ import {
   createProduct,
   deleteProduct,
   getSellerProducts,
+  getShopProducts,
   updateProduct,
   ProductFormData,
 } from "@/services/product";
 import { DocumentSnapshot } from "firebase/firestore";
+
+export function useShopProducts(category: string | null) {
+  return useInfiniteQuery({
+    queryKey: ["products", "shop", category],
+    queryFn: ({ pageParam }) =>
+      getShopProducts(category, pageParam as DocumentSnapshot | undefined),
+    initialPageParam: undefined as DocumentSnapshot | undefined,
+    getNextPageParam: (lastPage) => lastPage.lastDoc ?? undefined,
+  });
+}
 
 export function useSellerProducts(sellerId: string) {
   return useInfiniteQuery({

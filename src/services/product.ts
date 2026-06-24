@@ -129,6 +129,29 @@ export async function getProductsByCategory(
   return snap.docs.map((d) => toProduct(d.id, d.data() as FirestoreProductData));
 }
 
+export async function getShopProducts(
+  category: string | null,
+  lastDoc?: DocumentSnapshot,
+  pageLimit = 12
+): Promise<{ products: Product[]; lastDoc: DocumentSnapshot | null }> {
+  const constraints: QueryConstraint[] = [];
+
+  if (category) {
+    constraints.push(where("productCategory", "==", category));
+  }
+
+  constraints.push(orderBy("createdAt", "desc"), limit(pageLimit));
+
+  if (lastDoc) constraints.push(startAfter(lastDoc));
+
+  const snap = await getDocs(query(collection(db, "products"), ...constraints));
+  const products = snap.docs.map((d) =>
+    toProduct(d.id, d.data() as FirestoreProductData)
+  );
+
+  return { products, lastDoc: snap.docs[snap.docs.length - 1] ?? null };
+}
+
 export async function getProduct(id: string): Promise<Product | null> {
   const snap = await getDoc(doc(db, "products", id));
   if (!snap.exists()) return null;
