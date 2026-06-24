@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { logout } from "@/services/auth";
 
-const CATEGORIES = ["전체", "상의", "하의", "아우터", "신발", "악세서리"];
+const CATEGORIES = ["전체", "의류", "리빙", "가전"];
 
 export default function Header() {
   const { user, profile, loading } = useAuth();
@@ -25,91 +25,97 @@ export default function Header() {
   const isSeller = profile?.isSeller;
 
   return (
-    <header className="sticky top-0 z-50 bg-black text-white border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* 로고 */}
-        <Link href="/" className="text-lg font-bold tracking-widest shrink-0">
-          CLOMMERCE
-        </Link>
+    <>
+      {/* 브랜드 바 */}
+      <header className="sticky top-0 z-50 bg-brand border-b border-white/10">
+        <div className="w-full px-6 h-11 flex items-center justify-between">
+          <Link
+            href="/"
+            className="text-white text-xs font-bold tracking-[0.25em] uppercase hover:opacity-80 transition-opacity"
+          >
+            CLOMMERCE
+          </Link>
 
-        {/* 카테고리 */}
-        <nav className="hidden md:flex items-center gap-7">
+          <div className="flex items-center gap-5">
+            {loading ? (
+              <div className="h-2 w-14 bg-white/20 rounded-xs animate-pulse" />
+            ) : (
+              <>
+                {!isSeller && (
+                  <Link href="/buyer/cart" aria-label="장바구니">
+                    <CartIcon />
+                  </Link>
+                )}
+
+                {user ? (
+                  <div className="relative" ref={menuRef}>
+                    <button
+                      onClick={() => setMenuOpen((prev) => !prev)}
+                      className="text-2xs text-white/70 hover:text-white transition-colors tracking-wide"
+                    >
+                      {profile?.nickname ?? user.email}
+                    </button>
+                    {menuOpen && (
+                      <div className="absolute right-0 mt-2 w-36 bg-white text-ink border border-rule shadow-lg py-1 text-2xs">
+                        {isSeller ? (
+                          <Link
+                            href="/seller/products"
+                            className="block px-4 py-2.5 hover:bg-fill transition-colors tracking-wide"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            상품 관리
+                          </Link>
+                        ) : (
+                          <Link
+                            href="/buyer/orders"
+                            className="block px-4 py-2.5 hover:bg-fill transition-colors tracking-wide"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            구매 내역
+                          </Link>
+                        )}
+                        <hr className="my-1 border-rule" />
+                        <button
+                          onClick={async () => {
+                            setMenuOpen(false);
+                            await logout();
+                          }}
+                          className="w-full text-left px-4 py-2.5 hover:bg-fill text-danger transition-colors tracking-wide"
+                        >
+                          로그아웃
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="text-2xs text-white/70 hover:text-white transition-colors tracking-wide"
+                  >
+                    로그인
+                  </Link>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* 카테고리 바 */}
+      <nav className="sticky top-11 z-40 bg-canvas border-b border-rule">
+        <div className="w-full px-6 h-8 flex items-center gap-7">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat}
               href={cat === "전체" ? "/" : `/?category=${encodeURIComponent(cat)}`}
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-2xs tracking-[0.15em] uppercase text-ink-muted hover:text-ink transition-colors"
             >
               {cat}
             </Link>
           ))}
-        </nav>
-
-        {/* 우측 영역 */}
-        <div className="flex items-center gap-5">
-          {loading ? (
-            <div className="h-3 w-16 bg-gray-700 rounded animate-pulse" />
-          ) : (
-            <>
-              {!isSeller && (
-                <Link href="/buyer/cart" aria-label="장바구니">
-                  <CartIcon />
-                </Link>
-              )}
-
-              {user ? (
-                <div className="relative" ref={menuRef}>
-                  <button
-                    onClick={() => setMenuOpen((prev) => !prev)}
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
-                  >
-                    {profile?.nickname ?? user.email}
-                  </button>
-                  {menuOpen && (
-                    <div className="absolute right-0 mt-3 w-36 bg-white text-black rounded shadow-xl py-1 text-sm">
-                      {isSeller ? (
-                        <Link
-                          href="/seller/products"
-                          className="block px-4 py-2 hover:bg-gray-50"
-                          onClick={() => setMenuOpen(false)}
-                        >
-                          상품 관리
-                        </Link>
-                      ) : (
-                        <Link
-                          href="/buyer/orders"
-                          className="block px-4 py-2 hover:bg-gray-50"
-                          onClick={() => setMenuOpen(false)}
-                        >
-                          구매 내역
-                        </Link>
-                      )}
-                      <hr className="my-1 border-gray-100" />
-                      <button
-                        onClick={async () => {
-                          setMenuOpen(false);
-                          await logout();
-                        }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-500"
-                      >
-                        로그아웃
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  href="/login"
-                  className="text-sm text-gray-300 hover:text-white transition-colors"
-                >
-                  로그인
-                </Link>
-              )}
-            </>
-          )}
         </div>
-      </div>
-    </header>
+      </nav>
+    </>
   );
 }
 
@@ -117,7 +123,7 @@ function CartIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-5 w-5 text-gray-400 hover:text-white transition-colors"
+      className="h-4 w-4 text-white/60 hover:text-white transition-colors"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
