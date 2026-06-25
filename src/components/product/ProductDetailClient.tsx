@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Product } from "@/types/product";
+import { useCartStore } from "@/store/cartStore";
 
 interface Props {
   product: Product;
@@ -14,11 +15,26 @@ export default function ProductDetailClient({ product, sellerName }: Props) {
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState(false);
 
+  const add = useCartStore((s) => s.add);
+  const openCart = useCartStore((s) => s.openCart);
+  const inCart = useCartStore((s) => s.items.some((i) => i.productId === product.id));
+
   const images = product.productImage;
   const THUMB_LIMIT = 4;
 
   const dec = () => setQuantity((q) => Math.max(1, q - 1));
   const inc = () => setQuantity((q) => Math.min(product.productQuantity, q + 1));
+
+  const handleAddToCart = () => {
+    add({
+      productId: product.id,
+      name: product.productName,
+      image: product.productImage[0] ?? "",
+      price: product.productPrice,
+      quantity,
+      maxQuantity: product.productQuantity,
+    });
+  };
 
   return (
     <main className="w-full px-4 sm:px-8 py-10">
@@ -130,12 +146,23 @@ export default function ProductDetailClient({ product, sellerName }: Props) {
             >
               {liked ? "♥" : "♡"}
             </button>
-            <button
-              type="button"
-              className="flex-1 h-11 border border-rule text-xs font-semibold tracking-[0.08em] text-heading hover:bg-fill transition-colors"
-            >
-              장바구니
-            </button>
+            {inCart ? (
+              <button
+                type="button"
+                onClick={openCart}
+                className="flex-1 h-11 border border-brand text-xs font-semibold tracking-[0.08em] text-brand hover:bg-brand hover:text-white transition-colors"
+              >
+                장바구니 보기
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="flex-1 h-11 border border-rule text-xs font-semibold tracking-[0.08em] text-heading hover:bg-fill transition-colors"
+              >
+                장바구니
+              </button>
+            )}
             <button
               type="button"
               className="flex-1 h-11 bg-brand text-white text-xs font-semibold tracking-[0.08em] hover:opacity-85 transition-opacity"
