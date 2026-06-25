@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { logout } from "@/services/auth";
+import { useCartStore } from "@/store/cartStore";
 
 const CATEGORIES = ["전체", "의류", "리빙", "가전"];
 
@@ -11,6 +12,8 @@ export default function Header() {
   const { user, profile, loading } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const totalCount = useCartStore((s) => s.items.reduce((sum, i) => sum + i.quantity, 0));
+  const openCart = useCartStore((s) => s.openCart);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -42,9 +45,22 @@ export default function Header() {
             ) : (
               <>
                 {!isSeller && (
-                  <Link href="/buyer/cart" aria-label="장바구니">
+                  <button
+                    type="button"
+                    onClick={openCart}
+                    aria-label={`장바구니${totalCount > 0 ? ` (${totalCount}개)` : ""}`}
+                    className="relative"
+                  >
                     <CartIcon />
-                  </Link>
+                    {totalCount > 0 && (
+                      <span
+                        suppressHydrationWarning
+                        className="absolute -top-1.5 -right-1.5 min-w-3.5 h-3.5 px-0.75 rounded-full bg-white text-brand text-[9px] font-bold leading-3.5 text-center tabular-nums"
+                      >
+                        {totalCount > 99 ? "99+" : totalCount}
+                      </span>
+                    )}
+                  </button>
                 )}
 
                 {user ? (
