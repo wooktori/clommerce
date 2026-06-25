@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import Header from "@/components/layout/Header";
+import CartDrawer from "@/components/cart/CartDrawer";
 
 const lato = Lato({
   weight: ["400", "700"],
@@ -29,6 +30,7 @@ export default function RootLayout({
           <AuthProvider>
             <Header />
             {children}
+            <CartDrawer />
           </AuthProvider>
         </QueryProvider>
       </body>
