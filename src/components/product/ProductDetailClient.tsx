@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Product } from "@/types/product";
 import { useCartStore } from "@/store/cartStore";
+import RelatedProducts from "./RelatedProducts";
 
 interface Props {
   product: Product;
@@ -186,6 +187,11 @@ export default function ProductDetailClient({ product, sellerName }: Props) {
           <p className="text-xs text-ink-muted">상세 설명이 없습니다.</p>
         )}
       </div>
+
+      <RelatedProducts
+        category={product.productCategory}
+        excludeId={product.id}
+      />
     </main>
   );
 }

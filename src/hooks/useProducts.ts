@@ -1,17 +1,30 @@
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import {
   createProduct,
   deleteProduct,
+  getProductsByCategory,
   getSellerProducts,
   getShopProducts,
   updateProduct,
   ProductFormData,
 } from "@/services/product";
 import { DocumentSnapshot } from "firebase/firestore";
+
+export function useRelatedProducts(category: string, excludeId: string) {
+  return useQuery({
+    queryKey: ["products", "related", category, excludeId],
+    queryFn: async () => {
+      const products = await getProductsByCategory(category, 5);
+      return products.filter((p) => p.id !== excludeId).slice(0, 4);
+    },
+    enabled: !!category,
+  });
+}
 
 export function useShopProducts(category: string | null) {
   return useInfiniteQuery({
