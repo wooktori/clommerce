@@ -12,6 +12,7 @@ import {
   limit,
   startAfter,
   serverTimestamp,
+  Timestamp,
   DocumentSnapshot,
   QueryConstraint,
 } from "firebase/firestore";
@@ -131,9 +132,9 @@ export async function getProductsByCategory(
 
 export async function getShopProducts(
   category: string | null,
-  lastDoc?: DocumentSnapshot,
+  lastCreatedAt?: number,
   pageLimit = 12
-): Promise<{ products: Product[]; lastDoc: DocumentSnapshot | null }> {
+): Promise<{ products: Product[]; lastCreatedAt: number | null }> {
   const constraints: QueryConstraint[] = [];
 
   if (category) {
@@ -142,14 +143,20 @@ export async function getShopProducts(
 
   constraints.push(orderBy("createdAt", "desc"), limit(pageLimit));
 
-  if (lastDoc) constraints.push(startAfter(lastDoc));
+  if (lastCreatedAt !== undefined) {
+    constraints.push(startAfter(Timestamp.fromMillis(lastCreatedAt)));
+  }
 
   const snap = await getDocs(query(collection(db, "products"), ...constraints));
   const products = snap.docs.map((d) =>
     toProduct(d.id, d.data() as FirestoreProductData)
   );
 
-  return { products, lastDoc: snap.docs[snap.docs.length - 1] ?? null };
+  const lastSnap = snap.docs[snap.docs.length - 1];
+  const rawCreatedAt = lastSnap?.data().createdAt as { toMillis?: () => number } | undefined;
+  const cursor = rawCreatedAt?.toMillis?.() ?? null;
+
+  return { products, lastCreatedAt: cursor };
 }
 
 export async function getProduct(id: string): Promise<Product | null> {

@@ -30,9 +30,9 @@ export function useShopProducts(category: string | null) {
   return useInfiniteQuery({
     queryKey: ["products", "shop", category],
     queryFn: ({ pageParam }) =>
-      getShopProducts(category, pageParam as DocumentSnapshot | undefined),
-    initialPageParam: undefined as DocumentSnapshot | undefined,
-    getNextPageParam: (lastPage) => lastPage.lastDoc ?? undefined,
+      getShopProducts(category, pageParam as number | undefined),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: (lastPage) => lastPage.lastCreatedAt ?? undefined,
   });
 }
 
