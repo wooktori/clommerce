@@ -52,7 +52,7 @@ export default function ShopPage({ category }: ShopPageProps) {
     PRICE_OPTIONS.find((o) => o.value === priceSort)?.label ?? "기본순";
 
   return (
-    <main className="w-full px-4 sm:px-6 py-6">
+    <main className="w-full py-6">
       {/* 검색 + 정렬 — 한 줄 */}
       <div className="flex items-center gap-3 mb-6 border-b border-rule pb-4">
         <div className="relative flex-1">

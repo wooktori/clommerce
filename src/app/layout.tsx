@@ -29,7 +29,9 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <Header />
-            {children}
+            <div className="px-4 sm:px-8 lg:px-16">
+              {children}
+            </div>
             <CartDrawer />
           </AuthProvider>
         </QueryProvider>

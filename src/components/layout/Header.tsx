@@ -31,10 +31,10 @@ export default function Header() {
     <>
       {/* 브랜드 바 */}
       <header className="sticky top-0 z-50 bg-brand border-b border-white/10">
-        <div className="w-full px-6 h-11 flex items-center justify-between">
+        <div className="w-full px-8 h-14 flex items-center justify-between">
           <Link
             href="/"
-            className="text-white text-xs font-bold tracking-[0.25em] uppercase hover:opacity-80 transition-opacity"
+            className="text-white text-sm font-bold tracking-[0.25em] uppercase hover:opacity-80 transition-opacity"
           >
             CLOMMERCE
           </Link>
@@ -118,13 +118,13 @@ export default function Header() {
       </header>
 
       {/* 카테고리 바 */}
-      <nav className="sticky top-11 z-40 bg-canvas border-b border-rule">
-        <div className="w-full px-6 h-8 flex items-center gap-7">
+      <nav className="sticky top-14 z-40 bg-canvas border-b border-rule">
+        <div className="w-full px-8 h-11 flex items-center gap-8">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat}
               href={cat === "전체" ? "/" : `/?category=${encodeURIComponent(cat)}`}
-              className="text-2xs tracking-[0.15em] uppercase text-ink-muted hover:text-ink transition-colors"
+              className="text-xs tracking-[0.15em] uppercase text-ink-muted hover:text-ink transition-colors"
             >
               {cat}
             </Link>
@@ -139,7 +139,7 @@ function CartIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4 text-white/60 hover:text-white transition-colors"
+      className="h-5 w-5 text-white/60 hover:text-white transition-colors"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
