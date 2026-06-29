@@ -19,7 +19,7 @@ export default function MainHero() {
     return (
       <div className="w-full flex overflow-hidden">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="flex-none basis-full sm:basis-1/2 lg:basis-1/3 aspect-3/4 skeleton" />
+          <div key={i} className="flex-none basis-full sm:basis-1/2 lg:basis-1/3 h-84 sm:h-96 lg:h-120 skeleton" />
         ))}
       </div>
     );
@@ -37,7 +37,7 @@ export default function MainHero() {
               href={`/products/${product.id}`}
               className="flex-none basis-full sm:basis-1/2 lg:basis-1/3 group/card block"
             >
-              <div className="relative aspect-3/4 overflow-hidden">
+              <div className="relative h-84 sm:h-96 lg:h-120 overflow-hidden">
                 {product.productImage[0] ? (
                   <Image
                     src={product.productImage[0]}
