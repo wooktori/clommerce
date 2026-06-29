@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import ShopProductCard from "./ShopProductCard";
-import { useShopProducts } from "@/hooks/useProducts";
+import { useAllShopProducts, useShopProducts } from "@/hooks/useProducts";
 import { Product } from "@/types/product";
 
 const PRICE_OPTIONS = [
@@ -19,35 +19,46 @@ interface ShopPageProps {
 
 export default function ShopPage({ category }: ShopPageProps) {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [priceSort, setPriceSort] = useState<PriceSort>("none");
   const [priceMenuOpen, setPriceMenuOpen] = useState(false);
   const { ref, inView } = useInView();
 
   const queryCategory = category && category !== "전체" ? category : null;
 
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  const isSearchMode = debouncedSearch.trim().length > 0;
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useShopProducts(queryCategory);
 
+  const { data: searchData, isLoading: isSearchLoading } =
+    useAllShopProducts(queryCategory, debouncedSearch);
+
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage();
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+    if (!isSearchMode && inView && hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [isSearchMode, inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const allProducts: Product[] = useMemo(
-    () => data?.pages.flatMap((p) => p.products) ?? [],
-    [data]
+    () =>
+      isSearchMode
+        ? (searchData ?? [])
+        : (data?.pages.flatMap((p) => p.products) ?? []),
+    [isSearchMode, searchData, data]
   );
 
   const displayed = useMemo(() => {
     let list = allProducts;
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      list = list.filter((p) => p.productName.toLowerCase().includes(q));
-    }
     if (priceSort === "asc") list = [...list].sort((a, b) => a.productPrice - b.productPrice);
     if (priceSort === "desc") list = [...list].sort((a, b) => b.productPrice - a.productPrice);
     return list;
-  }, [allProducts, search, priceSort]);
+  }, [allProducts, priceSort]);
 
+  const showLoading = isSearchMode ? isSearchLoading : isLoading;
   const currentPriceLabel =
     PRICE_OPTIONS.find((o) => o.value === priceSort)?.label ?? "기본순";
 
@@ -105,7 +116,7 @@ export default function ShopPage({ category }: ShopPageProps) {
       </div>
 
       {/* 상품 그리드 */}
-      {isLoading ? (
+      {showLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i}>
@@ -118,7 +129,7 @@ export default function ShopPage({ category }: ShopPageProps) {
       ) : displayed.length === 0 ? (
         <div className="py-32 text-center">
           <p className="text-xs text-ink-muted">
-            {search ? `"${search}"에 해당하는 상품이 없습니다.` : "상품이 없습니다."}
+            {isSearchMode ? `"${debouncedSearch}"에 해당하는 상품이 없습니다.` : "상품이 없습니다."}
           </p>
         </div>
       ) : (
@@ -130,7 +141,7 @@ export default function ShopPage({ category }: ShopPageProps) {
       )}
 
       <div ref={ref} className="h-10 mt-8 flex items-center justify-center">
-        {isFetchingNextPage && (
+        {!isSearchMode && isFetchingNextPage && (
           <span className="text-2xs text-ink-muted tracking-widest uppercase">Loading</span>
         )}
       </div>

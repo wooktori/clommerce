@@ -7,6 +7,7 @@ import {
 import {
   createProduct,
   deleteProduct,
+  getAllShopProducts,
   getProductsByCategory,
   getSellerProducts,
   getShopProducts,
@@ -23,6 +24,19 @@ export function useRelatedProducts(category: string, excludeId: string) {
       return products.filter((p) => p.id !== excludeId).slice(0, 4);
     },
     enabled: !!category,
+  });
+}
+
+export function useAllShopProducts(category: string | null, searchQuery: string) {
+  return useQuery({
+    queryKey: ["products", "search", category],
+    queryFn: () => getAllShopProducts(category),
+    enabled: searchQuery.trim().length > 0,
+    select: (products) => {
+      const q = searchQuery.trim().toLowerCase();
+      return products.filter((p) => p.productName.toLowerCase().includes(q));
+    },
+    staleTime: 60 * 1000,
   });
 }
 

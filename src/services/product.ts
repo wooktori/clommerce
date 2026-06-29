@@ -130,6 +130,17 @@ export async function getProductsByCategory(
   return snap.docs.map((d) => toProduct(d.id, d.data() as FirestoreProductData));
 }
 
+export async function getAllShopProducts(
+  category: string | null,
+  pageLimit = 200
+): Promise<Product[]> {
+  const constraints: QueryConstraint[] = [];
+  if (category) constraints.push(where("productCategory", "==", category));
+  constraints.push(orderBy("createdAt", "desc"), limit(pageLimit));
+  const snap = await getDocs(query(collection(db, "products"), ...constraints));
+  return snap.docs.map((d) => toProduct(d.id, d.data() as FirestoreProductData));
+}
+
 export async function getShopProducts(
   category: string | null,
   lastCreatedAt?: number,
