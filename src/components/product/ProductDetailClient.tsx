@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Product } from "@/types/product";
 import { useCartStore } from "@/store/cartStore";
+import { useAuth } from "@/providers/AuthProvider";
 import RelatedProducts from "./RelatedProducts";
 
 interface Props {
@@ -12,6 +14,8 @@ interface Props {
 }
 
 export default function ProductDetailClient({ product, sellerName }: Props) {
+  const { user } = useAuth();
+  const router = useRouter();
   const [mainIdx, setMainIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState(false);
@@ -27,6 +31,10 @@ export default function ProductDetailClient({ product, sellerName }: Props) {
   const inc = () => setQuantity((q) => Math.min(product.productQuantity, q + 1));
 
   const handleAddToCart = () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
     add({
       productId: product.id,
       name: product.productName,
@@ -35,6 +43,14 @@ export default function ProductDetailClient({ product, sellerName }: Props) {
       quantity,
       maxQuantity: product.productQuantity,
     });
+  };
+
+  const handleBuyNow = () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    // TODO: 결제 플로우 연결
   };
 
   return (
@@ -166,6 +182,7 @@ export default function ProductDetailClient({ product, sellerName }: Props) {
             )}
             <button
               type="button"
+              onClick={handleBuyNow}
               className="flex-1 h-11 bg-brand text-white text-xs font-semibold tracking-[0.08em] hover:opacity-85 transition-opacity"
             >
               바로 구매

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { logout } from "@/services/auth";
 import { useCartStore } from "@/store/cartStore";
@@ -10,10 +11,19 @@ const CATEGORIES = ["전체", "의류", "리빙", "가전"];
 
 export default function Header() {
   const { user, profile, loading } = useAuth();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const totalCount = useCartStore((s) => s.items.reduce((sum, i) => sum + i.quantity, 0));
+  const totalCount = useCartStore((s) => s.items.length);
   const openCart = useCartStore((s) => s.openCart);
+
+  function handleCartClick() {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    openCart();
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -47,7 +57,7 @@ export default function Header() {
                 {!isSeller && (
                   <button
                     type="button"
-                    onClick={openCart}
+                    onClick={handleCartClick}
                     aria-label={`장바구니${totalCount > 0 ? ` (${totalCount}개)` : ""}`}
                     className="relative"
                   >
