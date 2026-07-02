@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useBuyerOrders, useCancelOrder } from "@/hooks/useOrders";
 import { Order, OrderStatus, ORDER_STATUS, ORDER_STATUS_LABEL } from "@/types/order";
+import { formatDate } from "@/lib/date";
 
 function StatusBadge({ status }: { status: OrderStatus }) {
   const label = ORDER_STATUS_LABEL[status];
@@ -33,10 +34,7 @@ function StatusBadge({ status }: { status: OrderStatus }) {
 function OrderRow({ order }: { order: Order }) {
   const { mutate: cancel, isPending } = useCancelOrder();
 
-  const date = order.createdAt
-    .toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
-    .replace(/\. /g, ".")
-    .replace(/\.$/, "");
+  const date = formatDate(order.createdAt);
 
   const canCancel = order.status === ORDER_STATUS.ORDER_COMPLETE;
 

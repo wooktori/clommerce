@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useAuth } from "@/providers/AuthProvider";
 import { useSellerOrders, useUpdateOrderStatus } from "@/hooks/useOrders";
 import { Order, OrderStatus, ORDER_STATUS, ORDER_STATUS_LABEL } from "@/types/order";
+import { formatDate } from "@/lib/date";
 
 const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
   [ORDER_STATUS.ORDER_COMPLETE]:   ORDER_STATUS.PENDING_SHIPMENT,
@@ -13,10 +14,7 @@ const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
 function OrderRow({ order }: { order: Order }) {
   const { mutate: updateStatus, isPending } = useUpdateOrderStatus();
 
-  const date = order.createdAt
-    .toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
-    .replace(/\. /g, ".")
-    .replace(/\.$/, "");
+  const date = formatDate(order.createdAt);
 
   const nextStatus = NEXT_STATUS[order.status];
   const isCancelled = order.status === ORDER_STATUS.CANCELLED;

@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/providers/AuthProvider";
 import { useSellerProducts, useDeleteProduct } from "@/hooks/useProducts";
+import { formatShortDate } from "@/lib/date";
 
 export default function SellerProductList() {
   const { user } = useAuth();
@@ -110,10 +111,7 @@ export default function SellerProductList() {
         {!isLoading && products.length > 0 && (
           <ul>
             {products.map((product) => {
-              const date = product.createdAt
-                .toLocaleDateString("ko-KR", { month: "2-digit", day: "2-digit" })
-                .replace(/\. $/, "")
-                .replace(". ", ".");
+              const date = formatShortDate(product.createdAt);
 
               return (
                 <li
