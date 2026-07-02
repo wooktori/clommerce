@@ -13,6 +13,7 @@ import { decreaseStock, restoreStock, getProduct } from "@/services/product";
 import { requestPay } from "@/lib/iamport";
 import { ORDER_STATUS } from "@/types/order";
 import FormField from "@/components/ui/FormField";
+import Spinner from "@/components/ui/Spinner";
 
 const checkoutSchema = z.object({
   buyerName: z.string().trim().min(2, "이름을 입력해주세요."),
@@ -219,9 +220,13 @@ export default function CheckoutClient() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="h-12 bg-brand text-white text-xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+            className="h-12 bg-brand text-white text-xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity inline-flex items-center justify-center"
           >
-            {isSubmitting ? "처리 중..." : `₩ ${totalPrice.toLocaleString()} 결제하기`}
+            {isSubmitting ? (
+              <Spinner size="sm" className="border-white/30 border-t-white" />
+            ) : (
+              `₩ ${totalPrice.toLocaleString()} 결제하기`
+            )}
           </button>
         </form>
       </main>

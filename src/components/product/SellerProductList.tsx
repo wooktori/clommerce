@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useAuth } from "@/providers/AuthProvider";
 import { useSellerProducts, useDeleteProduct } from "@/hooks/useProducts";
 import { formatShortDate } from "@/lib/date";
+import Spinner from "@/components/ui/Spinner";
 
 export default function SellerProductList() {
   const { user } = useAuth();
@@ -175,9 +176,7 @@ export default function SellerProductList() {
 
         {/* 무한 스크롤 트리거 */}
         <div ref={ref} className="h-10 flex items-center justify-center">
-          {isFetchingNextPage && (
-            <span className="text-2xs text-ink-muted tracking-widest uppercase">Loading</span>
-          )}
+          {isFetchingNextPage && <Spinner size="sm" />}
         </div>
       </div>
 
@@ -188,9 +187,9 @@ export default function SellerProductList() {
           <button
             onClick={handleConfirmDelete}
             disabled={isDeleting}
-            className="text-xs font-bold underline underline-offset-2 hover:no-underline disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-1.5 text-xs font-bold underline underline-offset-2 hover:no-underline disabled:opacity-50 transition-all"
           >
-            {isDeleting ? "삭제 중..." : "삭제"}
+            {isDeleting ? <Spinner size="sm" /> : "삭제"}
           </button>
           <button
             onClick={() => setPendingDeleteId(null)}

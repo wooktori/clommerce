@@ -12,6 +12,7 @@ import { signUpWithEmail, loginWithSocial, SocialProvider } from "@/services/aut
 import { validatePassword } from "@/lib/validation";
 import SocialLoginButton from "./SocialLoginButton";
 import FormField from "@/components/ui/FormField";
+import Spinner from "@/components/ui/Spinner";
 
 const signupSchema = z
   .object({
@@ -140,9 +141,9 @@ export default function SignupForm() {
       <button
         type="submit"
         disabled={disabled}
-        className="bg-brand text-white rounded-xs h-11 w-full text-2xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-1"
+        className="bg-brand text-white rounded-xs h-11 w-full text-2xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-1 inline-flex items-center justify-center"
       >
-        {isSubmitting ? "처리 중..." : "회원가입"}
+        {isSubmitting ? <Spinner size="sm" className="border-white/30 border-t-white" /> : "회원가입"}
       </button>
 
       <div className="flex items-center gap-3 my-1">

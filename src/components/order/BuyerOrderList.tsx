@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useBuyerOrders, useCancelOrder } from "@/hooks/useOrders";
 import { Order, OrderStatus, ORDER_STATUS, ORDER_STATUS_LABEL } from "@/types/order";
 import { formatDate } from "@/lib/date";
+import Spinner from "@/components/ui/Spinner";
 
 function StatusBadge({ status }: { status: OrderStatus }) {
   const label = ORDER_STATUS_LABEL[status];
@@ -77,9 +78,9 @@ function OrderRow({ order }: { order: Order }) {
             type="button"
             onClick={() => cancel({ orderId: order.id, productId: order.productId, quantity: order.quantity })}
             disabled={isPending}
-            className="inline-block px-3 py-1.5 rounded text-xs font-medium border border-rule text-ink hover:bg-fill transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center px-3 py-1.5 rounded text-xs font-medium border border-rule text-ink hover:bg-fill transition-colors disabled:opacity-50"
           >
-            주문 취소
+            {isPending ? <Spinner size="sm" /> : "주문 취소"}
           </button>
         ) : (
           <StatusBadge status={order.status} />

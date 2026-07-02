@@ -9,6 +9,7 @@ import { z } from "zod";
 import { Product } from "@/types/product";
 import { ProductFormData } from "@/services/product";
 import { PRODUCT_CATEGORIES } from "@/constants/categories";
+import Spinner from "@/components/ui/Spinner";
 
 const productSchema = z.object({
   productName: z.string().min(1, "상품명을 입력해주세요."),
@@ -269,9 +270,9 @@ export default function ProductForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 h-12 bg-heading text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+          className="flex-1 h-12 bg-heading text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity inline-flex items-center justify-center"
         >
-          {loading ? "저장 중..." : submitLabel}
+          {loading ? <Spinner size="sm" className="border-white/30 border-t-white" /> : submitLabel}
         </button>
       </div>
     </form>

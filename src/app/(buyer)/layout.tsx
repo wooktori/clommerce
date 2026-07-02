@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
+import Spinner from "@/components/ui/Spinner";
 
 export default function BuyerLayout({
   children,
@@ -26,7 +27,7 @@ export default function BuyerLayout({
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        로딩 중...
+        <Spinner />
       </div>
     );
   }

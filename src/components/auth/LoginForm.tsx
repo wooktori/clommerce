@@ -11,6 +11,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { loginWithEmail, loginWithSocial, SocialProvider } from "@/services/auth";
 import SocialLoginButton from "./SocialLoginButton";
 import FormField from "@/components/ui/FormField";
+import Spinner from "@/components/ui/Spinner";
 
 const loginSchema = z.object({
   email: z.email("올바른 이메일 형식이 아닙니다."),
@@ -94,9 +95,9 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-brand text-white rounded-xs h-11 w-full text-2xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-1"
+        className="bg-brand text-white rounded-xs h-11 w-full text-2xs font-semibold tracking-[0.15em] uppercase hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity mt-1 inline-flex items-center justify-center"
       >
-        {isSubmitting ? "처리 중..." : "로그인"}
+        {isSubmitting ? <Spinner size="sm" className="border-white/30 border-t-white" /> : "로그인"}
       </button>
 
       <div className="flex items-center gap-3 my-1">

@@ -5,6 +5,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useSellerOrders, useUpdateOrderStatus } from "@/hooks/useOrders";
 import { Order, OrderStatus, ORDER_STATUS, ORDER_STATUS_LABEL } from "@/types/order";
 import { formatDate } from "@/lib/date";
+import Spinner from "@/components/ui/Spinner";
 
 const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
   [ORDER_STATUS.ORDER_COMPLETE]:   ORDER_STATUS.PENDING_SHIPMENT,
@@ -57,9 +58,9 @@ function OrderRow({ order }: { order: Order }) {
             type="button"
             onClick={() => updateStatus({ orderId: order.id, status: nextStatus })}
             disabled={isPending}
-            className="text-2xs text-brand underline underline-offset-2 hover:no-underline disabled:opacity-50 transition-all"
+            className="inline-flex items-center justify-center text-2xs text-brand underline underline-offset-2 hover:no-underline disabled:opacity-50 transition-all"
           >
-            {ORDER_STATUS_LABEL[nextStatus]}으로 변경
+            {isPending ? <Spinner size="sm" /> : `${ORDER_STATUS_LABEL[nextStatus]}으로 변경`}
           </button>
         )}
       </div>

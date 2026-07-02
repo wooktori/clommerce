@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import ShopProductCard from "./ShopProductCard";
+import Spinner from "@/components/ui/Spinner";
 import { useAllShopProducts, useShopProducts } from "@/hooks/useProducts";
 import { Product } from "@/types/product";
 
@@ -141,9 +142,7 @@ export default function ShopPage({ category }: ShopPageProps) {
       )}
 
       <div ref={ref} className="h-10 mt-8 flex items-center justify-center">
-        {!isSearchMode && isFetchingNextPage && (
-          <span className="text-2xs text-ink-muted tracking-widest uppercase">Loading</span>
-        )}
+        {!isSearchMode && isFetchingNextPage && <Spinner size="sm" />}
       </div>
     </main>
   );

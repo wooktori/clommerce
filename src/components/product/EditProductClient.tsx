@@ -8,6 +8,7 @@ import { getProduct } from "@/services/product";
 import { Product } from "@/types/product";
 import ProductForm from "./ProductForm";
 import { ProductFormData } from "@/services/product";
+import Spinner from "@/components/ui/Spinner";
 
 function DeleteModal({
   productName,
@@ -46,9 +47,9 @@ function DeleteModal({
             type="button"
             onClick={onConfirm}
             disabled={isPending}
-            className="flex-1 h-12 bg-danger text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+            className="flex-1 h-12 bg-danger text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 transition-opacity inline-flex items-center justify-center"
           >
-            {isPending ? "삭제 중..." : "삭제"}
+            {isPending ? <Spinner size="sm" className="border-white/30 border-t-white" /> : "삭제"}
           </button>
         </div>
       </div>
