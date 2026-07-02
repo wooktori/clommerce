@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Product } from "@/types/product";
 import { ProductFormData } from "@/services/product";
-import { PRODUCT_PRODUCT_CATEGORIES } from "@/constants/categories";
+import { PRODUCT_CATEGORIES } from "@/constants/categories";
 
 const productSchema = z.object({
   productName: z.string().min(1, "상품명을 입력해주세요."),
