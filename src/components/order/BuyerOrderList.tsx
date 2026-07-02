@@ -4,26 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useBuyerOrders, useCancelOrder } from "@/hooks/useOrders";
-import { Order, OrderStatus } from "@/types/order";
+import { Order, OrderStatus, ORDER_STATUS } from "@/types/order";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
-  pending: "결제 완료",
-  shipping: "배송 중",
-  delivered: "배송 완료",
-  cancelled: "취소",
+  [ORDER_STATUS.ORDER_COMPLETE]:   "주문 완료",
+  [ORDER_STATUS.PENDING_SHIPMENT]: "발송 대기",
+  [ORDER_STATUS.SHIPPING]:         "발송 시작",
+  [ORDER_STATUS.CANCELLED]:        "주문 취소",
 };
 
 function StatusBadge({ status }: { status: OrderStatus }) {
   const label = STATUS_LABEL[status];
 
-  if (status === "shipping") {
+  if (status === ORDER_STATUS.SHIPPING) {
     return (
       <span className="inline-block px-3 py-1.5 rounded text-xs font-medium bg-heading text-white whitespace-nowrap">
         {label}
       </span>
     );
   }
-  if (status === "cancelled") {
+  if (status === ORDER_STATUS.CANCELLED) {
     return (
       <span className="inline-block px-3 py-1.5 rounded text-xs font-medium border border-rule text-ink-subtle whitespace-nowrap">
         {label}
@@ -45,7 +45,7 @@ function OrderRow({ order }: { order: Order }) {
     .replace(/\. /g, ".")
     .replace(/\.$/, "");
 
-  const canCancel = order.status === "pending";
+  const canCancel = order.status === ORDER_STATUS.ORDER_COMPLETE;
 
   return (
     <li className="flex items-center gap-4 py-5">
@@ -67,7 +67,7 @@ function OrderRow({ order }: { order: Order }) {
 
       {/* 상품 정보 */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-ink-muted mb-0.5">{date}</p>
+        <p className="text-xs text-ink-muted mb-0.5">{date} · {order.sellerName}</p>
         <Link
           href={`/products/${order.productId}`}
           className="text-sm font-medium text-brand hover:underline block truncate"
@@ -84,7 +84,7 @@ function OrderRow({ order }: { order: Order }) {
         {canCancel ? (
           <button
             type="button"
-            onClick={() => cancel(order.id)}
+            onClick={() => cancel({ orderId: order.id, productId: order.productId, quantity: order.quantity })}
             disabled={isPending}
             className="inline-block px-3 py-1.5 rounded text-xs font-medium border border-rule text-ink hover:bg-fill transition-colors disabled:opacity-50"
           >

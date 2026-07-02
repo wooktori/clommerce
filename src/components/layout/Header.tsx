@@ -84,13 +84,22 @@ export default function Header() {
                     {menuOpen && (
                       <div className="absolute right-0 mt-2 w-36 bg-white text-ink border border-rule shadow-lg py-1 text-2xs">
                         {isSeller ? (
-                          <Link
-                            href="/seller/products"
-                            className="block px-4 py-2.5 hover:bg-fill transition-colors tracking-wide"
-                            onClick={() => setMenuOpen(false)}
-                          >
-                            상품 관리
-                          </Link>
+                          <>
+                            <Link
+                              href="/seller/products"
+                              className="block px-4 py-2.5 hover:bg-fill transition-colors tracking-wide"
+                              onClick={() => setMenuOpen(false)}
+                            >
+                              상품 관리
+                            </Link>
+                            <Link
+                              href="/seller/orders"
+                              className="block px-4 py-2.5 hover:bg-fill transition-colors tracking-wide"
+                              onClick={() => setMenuOpen(false)}
+                            >
+                              주문 관리
+                            </Link>
+                          </>
                         ) : (
                           <Link
                             href="/buyer/orders"

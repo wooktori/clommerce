@@ -12,6 +12,7 @@ import {
   limit,
   startAfter,
   serverTimestamp,
+  runTransaction,
   Timestamp,
   DocumentSnapshot,
   QueryConstraint,
@@ -204,4 +205,31 @@ export async function deleteProduct(id: string): Promise<void> {
     await deleteProductImages(product.productImage);
   }
   await deleteDoc(doc(db, "products", id));
+}
+
+export async function decreaseStock(productId: string, qty: number): Promise<void> {
+  await runTransaction(db, async (transaction) => {
+    const productRef = doc(db, "products", productId);
+    const snap = await transaction.get(productRef);
+    if (!snap.exists()) throw new Error("상품을 찾을 수 없습니다.");
+    const current = snap.data().productQuantity as number;
+    if (current < qty) throw new Error("재고가 부족합니다.");
+    transaction.update(productRef, {
+      productQuantity: current - qty,
+      updatedAt: serverTimestamp(),
+    });
+  });
+}
+
+export async function restoreStock(productId: string, qty: number): Promise<void> {
+  await runTransaction(db, async (transaction) => {
+    const productRef = doc(db, "products", productId);
+    const snap = await transaction.get(productRef);
+    if (!snap.exists()) return;
+    const current = snap.data().productQuantity as number;
+    transaction.update(productRef, {
+      productQuantity: current + qty,
+      updatedAt: serverTimestamp(),
+    });
+  });
 }

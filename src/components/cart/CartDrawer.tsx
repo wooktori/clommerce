@@ -1,11 +1,24 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
+import { useAuth } from "@/providers/AuthProvider";
 import { CartItem } from "@/types/cart";
 
 export default function CartDrawer() {
+  const { user } = useAuth();
+  const router = useRouter();
   const { items, isOpen, closeCart, remove, updateQty } = useCartStore();
+
+  function handleCheckout() {
+    closeCart();
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    router.push("/buyer/checkout");
+  }
 
   const totalPrice = items.reduce(
     (sum, i) => sum + i.price * i.quantity,
@@ -84,6 +97,7 @@ export default function CartDrawer() {
             </div>
             <button
               type="button"
+              onClick={handleCheckout}
               className="w-full h-11 bg-brand text-white text-xs font-semibold tracking-[0.08em] hover:opacity-85 transition-opacity"
             >
               구매하기
