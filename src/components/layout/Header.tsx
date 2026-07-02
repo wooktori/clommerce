@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { logout } from "@/services/auth";
 import { useCartStore } from "@/store/cartStore";
-
-const CATEGORIES = ["전체", "의류", "리빙", "가전"];
+import { SHOP_CATEGORIES } from "@/constants/categories";
 
 export default function Header() {
   const { user, profile, loading } = useAuth();
@@ -139,7 +138,7 @@ export default function Header() {
       {/* 카테고리 바 */}
       <nav className="sticky top-14 z-40 bg-canvas border-b border-rule">
         <div className="w-full px-8 h-11 flex items-center gap-8">
-          {CATEGORIES.map((cat) => (
+          {SHOP_CATEGORIES.map((cat) => (
             <Link
               key={cat}
               href={cat === "전체" ? "/" : `/?category=${encodeURIComponent(cat)}`}

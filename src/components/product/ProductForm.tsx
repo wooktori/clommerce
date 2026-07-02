@@ -8,8 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Product } from "@/types/product";
 import { ProductFormData } from "@/services/product";
-
-const CATEGORIES = ["의류", "리빙", "가전"];
+import { PRODUCT_PRODUCT_CATEGORIES } from "@/constants/categories";
 
 const productSchema = z.object({
   productName: z.string().min(1, "상품명을 입력해주세요."),
@@ -55,7 +54,7 @@ export default function ProductForm({
       productPrice: initialData?.productPrice ?? 0,
       productQuantity: initialData?.productQuantity ?? 1,
       productDescription: initialData?.productDescription ?? "",
-      productCategory: initialData?.productCategory ?? CATEGORIES[0],
+      productCategory: initialData?.productCategory ?? PRODUCT_CATEGORIES[0],
     },
   });
 
@@ -176,7 +175,7 @@ export default function ProductForm({
       <div>
         <p className={labelClass}>카테고리</p>
         <div className="flex gap-2">
-          {CATEGORIES.map((cat) => (
+          {PRODUCT_CATEGORIES.map((cat) => (
             <button
               key={cat}
               type="button"
