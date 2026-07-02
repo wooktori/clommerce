@@ -59,7 +59,7 @@ function OrderRow({ order }: { order: Order }) {
             disabled={isPending}
             className="text-2xs text-brand underline underline-offset-2 hover:no-underline disabled:opacity-50 transition-all"
           >
-            {STATUS_LABEL[nextStatus]}으로 변경
+            {ORDER_STATUS_LABEL[nextStatus]}으로 변경
           </button>
         )}
       </div>
