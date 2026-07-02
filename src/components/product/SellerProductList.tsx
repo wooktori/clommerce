@@ -96,10 +96,10 @@ export default function SellerProductList() {
         </div>
 
         {/* 컬럼 헤더 */}
-        <div className="grid grid-cols-[1fr_120px_72px_96px] px-6 py-2.5 border-t border-b border-rule bg-fill">
+        <div className="grid grid-cols-[1fr_88px_96px] sm:grid-cols-[1fr_120px_72px_96px] px-6 py-2.5 border-t border-b border-rule bg-fill">
           <span className="text-2xs tracking-widest uppercase text-ink-muted">상품</span>
           <span className="text-2xs tracking-widest uppercase text-ink-muted">가격</span>
-          <span className="text-2xs tracking-widest uppercase text-ink-muted">등록일</span>
+          <span className="hidden sm:block text-2xs tracking-widest uppercase text-ink-muted">등록일</span>
           <span className="text-2xs tracking-widest uppercase text-ink-muted">관리</span>
         </div>
 
@@ -109,14 +109,14 @@ export default function SellerProductList() {
             {Array.from({ length: 5 }).map((_, i) => (
               <li
                 key={i}
-                className="grid grid-cols-[1fr_120px_72px_96px] items-center px-6 py-4 border-b border-rule"
+                className="grid grid-cols-[1fr_88px_96px] sm:grid-cols-[1fr_120px_72px_96px] items-center px-6 py-4 border-b border-rule"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-fill shrink-0 skeleton" />
                   <div className="h-3 bg-fill rounded-xs w-32 skeleton" />
                 </div>
                 <div className="h-3 bg-fill rounded-xs w-20 skeleton" />
-                <div className="h-3 bg-fill rounded-xs w-10 skeleton" />
+                <div className="hidden sm:block h-3 bg-fill rounded-xs w-10 skeleton" />
                 <div className="flex gap-2">
                   <div className="h-7 w-12 bg-fill rounded-xs skeleton" />
                   <div className="h-7 w-12 bg-fill rounded-xs skeleton" />
@@ -142,7 +142,7 @@ export default function SellerProductList() {
               return (
                 <li
                   key={product.id}
-                  className="grid grid-cols-[1fr_120px_72px_96px] items-center px-6 py-4 border-b border-rule last:border-b-0 hover:bg-fill/60 transition-colors"
+                  className="grid grid-cols-[1fr_88px_96px] sm:grid-cols-[1fr_120px_72px_96px] items-center px-6 py-4 border-b border-rule last:border-b-0 hover:bg-fill/60 transition-colors"
                 >
                   {/* 상품명 + 썸네일 */}
                   <div className="flex items-center gap-3 min-w-0">
@@ -161,7 +161,7 @@ export default function SellerProductList() {
                   </p>
 
                   {/* 등록일 */}
-                  <p className="text-2xs text-ink-muted tabular-nums">{date}</p>
+                  <p className="hidden sm:block text-2xs text-ink-muted tabular-nums">{date}</p>
 
                   {/* 관리 버튼 */}
                   <div className="flex items-center gap-1.5">
