@@ -290,4 +290,13 @@
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.45; }
   }
+
+  /* ── Toast ──────────────────────────────────────────────────────── */
+  .animate-slide-up {
+    animation: toast-slide-up 0.2s var(--ease-standard) both;
+  }
+  @keyframes toast-slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 }

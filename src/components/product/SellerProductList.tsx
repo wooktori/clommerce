@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useToastStore } from "@/store/toastStore";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,18 +16,12 @@ export default function SellerProductList() {
     useSellerProducts(user?.uid ?? "");
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
+  const showToast = useToastStore((s) => s.show);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 2500);
-    return () => clearTimeout(t);
-  }, [toast]);
 
   const products = data?.pages.flatMap((p) => p.products) ?? [];
   const totalCount = products.length;
@@ -42,11 +37,11 @@ export default function SellerProductList() {
       {
         onSuccess: () => {
           setPendingDeleteId(null);
-          setToast({ message: "상품이 삭제되었습니다.", type: "success" });
+          showToast("상품이 삭제되었습니다.", "success");
         },
         onError: () => {
           setPendingDeleteId(null);
-          setToast({ message: "삭제에 실패했습니다.", type: "error" });
+          showToast("삭제에 실패했습니다.", "error");
         },
       }
     );
@@ -190,7 +185,7 @@ export default function SellerProductList() {
 
       {/* 삭제 확인 토스트 */}
       {pendingDeleteId && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-5 bg-heading text-white shadow-xl px-6 py-3.5">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-5 bg-heading text-white shadow-xl px-6 py-3.5">
           <span className="text-xs">이 상품을 삭제하시겠습니까?</span>
           <button
             onClick={handleConfirmDelete}
@@ -208,16 +203,6 @@ export default function SellerProductList() {
         </div>
       )}
 
-      {/* 결과 토스트 */}
-      {toast && (
-        <div
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3.5 shadow-xl text-xs font-medium ${
-            toast.type === "success" ? "bg-success text-white" : "bg-danger text-white"
-          }`}
-        >
-          {toast.message}
-        </div>
-      )}
     </>
   );
 }

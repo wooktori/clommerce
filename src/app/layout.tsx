@@ -5,6 +5,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import Header from "@/components/layout/Header";
 import CartDrawer from "@/components/cart/CartDrawer";
+import Toast from "@/components/ui/Toast";
 
 const lato = Lato({
   weight: ["400", "700"],
@@ -33,6 +34,7 @@ export default function RootLayout({
               {children}
             </div>
             <CartDrawer />
+            <Toast />
           </AuthProvider>
         </QueryProvider>
       </body>
