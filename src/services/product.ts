@@ -1,7 +1,7 @@
 import {
   collection,
   doc,
-  addDoc,
+  setDoc,
   getDoc,
   getDocs,
   updateDoc,
@@ -24,6 +24,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
+import { compressImage } from "@/lib/image";
 import { Product } from "@/types/product";
 
 type FirestoreProductData = Omit<Product, "id" | "createdAt" | "updatedAt"> & {
@@ -51,8 +52,9 @@ export async function uploadProductImages(
   files: File[]
 ): Promise<string[]> {
   const uploads = files.map(async (file) => {
-    const storageRef = ref(storage, `products/${productId}/${file.name}`);
-    await uploadBytes(storageRef, file);
+    const compressed = await compressImage(file);
+    const storageRef = ref(storage, `products/${productId}/${compressed.name}`);
+    await uploadBytes(storageRef, compressed);
     return getDownloadURL(storageRef);
   });
   return Promise.all(uploads);
@@ -77,17 +79,17 @@ export async function createProduct(
   data: ProductFormData,
   imageFiles: File[]
 ): Promise<string> {
-  const docRef = await addDoc(collection(db, "products"), {
-    sellerId,
-    ...data,
-    productImage: [],
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+  const docRef = doc(collection(db, "products"));
 
   const imageUrls = await uploadProductImages(docRef.id, imageFiles);
 
-  await updateDoc(docRef, { productImage: imageUrls });
+  await setDoc(docRef, {
+    sellerId,
+    ...data,
+    productImage: imageUrls,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
 
   return docRef.id;
 }
