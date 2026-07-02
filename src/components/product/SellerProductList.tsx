@@ -10,6 +10,31 @@ import { useSellerProducts, useDeleteProduct } from "@/hooks/useProducts";
 import { formatShortDate } from "@/lib/date";
 import Spinner from "@/components/ui/Spinner";
 
+function ProductThumbnail({ src, alt }: { src?: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div className="relative w-12 h-12 bg-fill shrink-0">
+      {src ? (
+        <>
+          {!loaded && <div className="absolute inset-0 skeleton" />}
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover"
+            onLoad={() => setLoaded(true)}
+          />
+        </>
+      ) : (
+        <div className="flex w-full h-full items-center justify-center text-2xs text-ink-subtle">
+          없음
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SellerProductList() {
   const { user } = useAuth();
   const { ref, inView } = useInView();
@@ -121,20 +146,7 @@ export default function SellerProductList() {
                 >
                   {/* 상품명 + 썸네일 */}
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="relative w-12 h-12 bg-fill shrink-0">
-                      {product.productImage[0] ? (
-                        <Image
-                          src={product.productImage[0]}
-                          alt={product.productName}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="flex w-full h-full items-center justify-center text-2xs text-ink-subtle">
-                          없음
-                        </div>
-                      )}
-                    </div>
+                    <ProductThumbnail src={product.productImage[0]} alt={product.productName} />
                     <Link
                       href={`/products/${product.id}`}
                       className="text-xs font-medium text-brand hover:underline truncate"
