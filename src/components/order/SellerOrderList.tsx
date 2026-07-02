@@ -3,14 +3,7 @@
 import Image from "next/image";
 import { useAuth } from "@/providers/AuthProvider";
 import { useSellerOrders, useUpdateOrderStatus } from "@/hooks/useOrders";
-import { Order, OrderStatus, ORDER_STATUS } from "@/types/order";
-
-const STATUS_LABEL: Record<OrderStatus, string> = {
-  [ORDER_STATUS.ORDER_COMPLETE]:   "주문 완료",
-  [ORDER_STATUS.PENDING_SHIPMENT]: "발송 대기",
-  [ORDER_STATUS.SHIPPING]:         "발송 시작",
-  [ORDER_STATUS.CANCELLED]:        "주문 취소",
-};
+import { Order, OrderStatus, ORDER_STATUS, ORDER_STATUS_LABEL } from "@/types/order";
 
 const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
   [ORDER_STATUS.ORDER_COMPLETE]:   ORDER_STATUS.PENDING_SHIPMENT,
@@ -58,7 +51,7 @@ function OrderRow({ order }: { order: Order }) {
               : "bg-fill text-ink"
           }`}
         >
-          {STATUS_LABEL[order.status]}
+          {ORDER_STATUS_LABEL[order.status]}
         </span>
 
         {nextStatus && !isCancelled && (

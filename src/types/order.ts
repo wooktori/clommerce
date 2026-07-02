@@ -7,6 +7,13 @@ export const ORDER_STATUS = {
 
 export type OrderStatus = typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
 
+export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+  [ORDER_STATUS.ORDER_COMPLETE]:   "주문 완료",
+  [ORDER_STATUS.PENDING_SHIPMENT]: "발송 대기",
+  [ORDER_STATUS.SHIPPING]:         "발송 시작",
+  [ORDER_STATUS.CANCELLED]:        "주문 취소",
+};
+
 export interface Order {
   id: string;
   buyerId: string;

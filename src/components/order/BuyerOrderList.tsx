@@ -4,17 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useBuyerOrders, useCancelOrder } from "@/hooks/useOrders";
-import { Order, OrderStatus, ORDER_STATUS } from "@/types/order";
-
-const STATUS_LABEL: Record<OrderStatus, string> = {
-  [ORDER_STATUS.ORDER_COMPLETE]:   "주문 완료",
-  [ORDER_STATUS.PENDING_SHIPMENT]: "발송 대기",
-  [ORDER_STATUS.SHIPPING]:         "발송 시작",
-  [ORDER_STATUS.CANCELLED]:        "주문 취소",
-};
+import { Order, OrderStatus, ORDER_STATUS, ORDER_STATUS_LABEL } from "@/types/order";
 
 function StatusBadge({ status }: { status: OrderStatus }) {
-  const label = STATUS_LABEL[status];
+  const label = ORDER_STATUS_LABEL[status];
 
   if (status === ORDER_STATUS.SHIPPING) {
     return (
