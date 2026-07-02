@@ -12,6 +12,7 @@ import { useCreateOrder } from "@/hooks/useOrders";
 import { decreaseStock, restoreStock, getProduct } from "@/services/product";
 import { requestPay } from "@/lib/iamport";
 import { ORDER_STATUS } from "@/types/order";
+import FormField from "@/components/ui/FormField";
 
 const checkoutSchema = z.object({
   buyerName: z.string().trim().min(2, "이름을 입력해주세요."),
@@ -180,50 +181,32 @@ export default function CheckoutClient() {
               </h2>
             </div>
             <div className="px-6 py-5 flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
-                  수령인
-                </label>
+              <FormField label="수령인" error={errors.buyerName?.message}>
                 <input
                   type="text"
                   {...register("buyerName")}
                   placeholder="홍길동"
                   className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
                 />
-                {errors.buyerName && (
-                  <p className="text-2xs text-danger">{errors.buyerName.message}</p>
-                )}
-              </div>
+              </FormField>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
-                  연락처
-                </label>
+              <FormField label="연락처" error={errors.buyerPhone?.message}>
                 <input
                   type="tel"
                   {...register("buyerPhone")}
                   placeholder="01012345678"
                   className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
                 />
-                {errors.buyerPhone && (
-                  <p className="text-2xs text-danger">{errors.buyerPhone.message}</p>
-                )}
-              </div>
+              </FormField>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted">
-                  배송지
-                </label>
+              <FormField label="배송지" error={errors.deliveryAddress?.message}>
                 <input
                   type="text"
                   {...register("deliveryAddress")}
                   placeholder="서울시 강남구 테헤란로 123"
                   className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
                 />
-                {errors.deliveryAddress && (
-                  <p className="text-2xs text-danger">{errors.deliveryAddress.message}</p>
-                )}
-              </div>
+              </FormField>
             </div>
           </section>
 

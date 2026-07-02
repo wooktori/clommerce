@@ -11,6 +11,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { signUpWithEmail, loginWithSocial, SocialProvider } from "@/services/auth";
 import { validatePassword } from "@/lib/validation";
 import SocialLoginButton from "./SocialLoginButton";
+import FormField from "@/components/ui/FormField";
 
 const signupSchema = z
   .object({
@@ -91,49 +92,25 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="nickname"
-          className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted"
-        >
-          닉네임
-        </label>
+      <FormField label="닉네임" htmlFor="nickname" error={errors.nickname?.message}>
         <input
           id="nickname"
           type="text"
           {...register("nickname")}
           className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
-        {errors.nickname && (
-          <p className="text-2xs text-danger">{errors.nickname.message}</p>
-        )}
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="email"
-          className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted"
-        >
-          이메일
-        </label>
+      <FormField label="이메일" htmlFor="email" error={errors.email?.message}>
         <input
           id="email"
           type="email"
           {...register("email")}
           className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
-        {errors.email && (
-          <p className="text-2xs text-danger">{errors.email.message}</p>
-        )}
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="password"
-          className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted"
-        >
-          비밀번호
-        </label>
+      <FormField label="비밀번호" htmlFor="password" error={errors.password?.message}>
         <input
           id="password"
           type="password"
@@ -143,10 +120,7 @@ export default function SignupForm() {
         <p className="text-2xs text-ink-subtle tracking-wide">
           8자 이상 (3종류 조합) 또는 10자 이상 (2종류 조합)
         </p>
-        {errors.password && (
-          <p className="text-2xs text-danger">{errors.password.message}</p>
-        )}
-      </div>
+      </FormField>
 
       <label className="flex items-center gap-2.5 cursor-pointer">
         <input

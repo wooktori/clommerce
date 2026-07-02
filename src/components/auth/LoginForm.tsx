@@ -10,6 +10,7 @@ import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/providers/AuthProvider";
 import { loginWithEmail, loginWithSocial, SocialProvider } from "@/services/auth";
 import SocialLoginButton from "./SocialLoginButton";
+import FormField from "@/components/ui/FormField";
 
 const loginSchema = z.object({
   email: z.email("올바른 이메일 형식이 아닙니다."),
@@ -65,13 +66,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="email"
-          className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted"
-        >
-          이메일
-        </label>
+      <FormField label="이메일" htmlFor="email" error={errors.email?.message}>
         <input
           id="email"
           type="email"
@@ -79,28 +74,16 @@ export default function LoginForm() {
           placeholder="name@email.com"
           className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors placeholder:text-ink-subtle"
         />
-        {errors.email && (
-          <p className="text-2xs text-danger">{errors.email.message}</p>
-        )}
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-2">
-        <label
-          htmlFor="password"
-          className="text-2xs font-semibold tracking-[0.12em] uppercase text-ink-muted"
-        >
-          비밀번호
-        </label>
+      <FormField label="비밀번호" htmlFor="password" error={errors.password?.message}>
         <input
           id="password"
           type="password"
           {...register("password")}
           className="border border-rule rounded-xs px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-brand transition-colors"
         />
-        {errors.password && (
-          <p className="text-2xs text-danger">{errors.password.message}</p>
-        )}
-      </div>
+      </FormField>
 
       {errors.root && (
         <p className="text-2xs text-danger border-l-2 border-danger pl-3 py-1">
